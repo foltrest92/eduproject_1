@@ -1,0 +1,8 @@
+.vscode
+.idea
+
+/venv
+
+.env
+config.json
+*.log

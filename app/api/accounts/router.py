@@ -13,5 +13,6 @@ async def get_my_account():
 
 @router.get('/get/{user_id}')
 async def get_account_by_user(user_id: int):
-    return await AccountsDAO.get_by_user(user_id)
+    account = await AccountsDAO.get_by_user(user_id)
+    return account
 

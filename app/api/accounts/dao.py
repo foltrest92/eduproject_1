@@ -9,10 +9,15 @@ class AccountsDAO(BaseDAO):
 
     @classmethod
     async def get_by_user(cls, user_id: int) -> list[Accounts]:
-        accounts = await cls.find_all(user_id=user_id)
+        accounts = await cls.select(user_id=user_id)
         return accounts
 
     @classmethod
-    async def add(cls, account: SAccount) -> SAccount:
-        account = await super().add(**account.model_dump())
+    async def new(cls, account: SAccount) -> SAccount:
+        account = await super().insert(**account.model_dump())
         return account
+    
+    @classmethod
+    async def select(cls, **filter_by) -> SAccount:
+        result = await super().select_one_or_none(**filter_by)
+        return result

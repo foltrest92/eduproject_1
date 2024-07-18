@@ -1,5 +1,8 @@
 import hashlib
 
+from sqlalchemy import and_, insert, update, union
+
+from app.api.accounts.models import Accounts
 from app.dao.base import BaseDAO
 from app.exceptions import InvalidSignatureException, TransactionIsAlreadyCommitedException
 from app.config import settings
@@ -17,25 +20,29 @@ class TransactionsDAO(BaseDAO):
     async def commit(cls, transaction_new: STransaction) -> bool:
         if not cls.__check_signature(transaction_new):
             raise InvalidSignatureException
-        if await cls.find_one_or_none(transaction_id=transaction_new.transaction_id):
+        if await cls.select_one_or_none(transaction_id=transaction_new.transaction_id):
             raise TransactionIsAlreadyCommitedException
-        else:
-            account = await AccountsDAO.find_all(
+        account = await AccountsDAO.select(
                 user_id=transaction_new.user_id,
                 account_id=transaction_new.account_id)
-            if not account:
-                await AccountsDAO.add(SAccount(
+        if not account:
+            account = await AccountsDAO.new(SAccount(
                     user_id=transaction_new.user_id,
-                    account_id=transaction_new.account_id,
-                    balance=0
+                    account_id=transaction_new.account_id
                 ))
-            transaction = await super().add(**{
-                'transaction_id': transaction_new.transaction_id,
-                'user_id': transaction_new.user_id,
-                'account_id': transaction_new.account_id,
-                'amount': transaction_new.amount
-            })
-            return bool(transaction)
+        d_transaction = insert(Transactions).values(
+            transaction_id= transaction_new.transaction_id,
+            user_id= transaction_new.user_id,
+            account_id= transaction_new.account_id,
+            amount= transaction_new.amount
+        ).returning(Transactions)
+        d_balance = update(Accounts).where(and_(
+                Accounts.user_id == transaction_new.user_id,
+                Accounts.account_id == transaction_new.account_id
+            )).values(balance = account.balance).returning(Accounts)
+        query = [d_transaction, d_balance]
+        result = await cls._update_base(query)
+        return bool(result)
     
     @classmethod
     def __check_signature(cls, transaction: STransaction) -> bool:
@@ -47,4 +54,5 @@ class TransactionsDAO(BaseDAO):
 
     @classmethod
     async def get_by_user(cls, user_id: int) -> list[STransactionBase]:
-        return await cls.find_all(user_id=user_id)
+        result = await cls.select(user_id=user_id)
+        return result

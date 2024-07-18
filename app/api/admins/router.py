@@ -10,11 +10,12 @@ router = APIRouter(
 
 @router.get('/get')
 async def get_admins() -> list[SAdmin]:
-    return await AdminsDAO.find_all()
+    admins = await AdminsDAO.find_all()
+    return admins
 
 @router.post('/new')
 async def reg_admin(admin: SAdminBase) -> SAdmin:
-    new_admin = await AdminsDAO.add(admin)
+    new_admin = await AdminsDAO.registate(admin)
     return new_admin
 
 @router.put('/update/{admin_id}')
@@ -24,4 +25,5 @@ async def update_admin(admin: SAdminBase, admin_id: int) -> SAdmin:
 
 @router.delete('/delete/{admin_id}')
 async def delete_admin(admin_id: int) -> bool:
-    return await AdminsDAO.delete(admin_id)
+    is_deleted = await AdminsDAO.delete(admin_id)
+    return is_deleted

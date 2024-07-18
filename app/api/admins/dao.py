@@ -10,14 +10,14 @@ class AdminsDAO(BaseDAO):
 
     @classmethod
     async def find_all(cls) -> list[SAdmin]:
-        return await super().find_all()
+        return await cls.select()
 
     @classmethod
-    async def add(cls, admin_base: SAdminBase) -> SAdmin:
-        if await cls.find_one_or_none(email=admin_base.email):
+    async def registate(cls, admin_base: SAdminBase) -> SAdmin:
+        if await cls.select_one_or_none(email=admin_base.email):
             raise UserIsAlreadyExist
         else:
-            admin = await super().add(**admin_base.model_dump())
+            admin = await super().insert(**admin_base.model_dump())
             return admin
     
     @classmethod

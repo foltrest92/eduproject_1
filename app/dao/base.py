@@ -10,7 +10,7 @@ class BaseDAO:
     uid = None
 
     @classmethod
-    async def __select(cls, query: list[UpdateBase] | UpdateBase):
+    async def _select(cls, query: list[UpdateBase] | UpdateBase):
         async with async_session_maker() as session:
             if isinstance(query, list):
                 result = [await session.execute(q) for q in query]
@@ -19,7 +19,7 @@ class BaseDAO:
             return result
     
     @classmethod
-    async def __update_base(cls, query: list[UpdateBase] | UpdateBase):
+    async def _update_base(cls, query: list[UpdateBase] | UpdateBase):
         async with async_session_maker() as session:
             if isinstance(query, list):
                 result = [await session.execute(q) for q in query]
@@ -31,33 +31,38 @@ class BaseDAO:
     @classmethod
     async def find_by_id(cls, model_id: int | UUID):
         query = select(cls.model.__table__.columns).filter_by(**filter)
-        mapped = await cls.__select(query).mappings().one_or_none()
+        mapped = await cls._select(query).mappings().one_or_none()
         if mapped:
             return mapped
         raise NoFoundException()
 
     @classmethod
-    async def find_one_or_none(cls, **filter_by):
+    async def select_one_or_none(cls, **filter_by):
         query = select(cls.model.__table__.columns).filter_by(**filter_by)
-        return await cls.__select(query).mappings().one_or_none()
+        result = await cls._select(query)
+        return result.mappings().one_or_none()
 
 
     @classmethod
     async def select(cls, **filter_by):
         query = select(cls.model.__table__.columns).filter_by(**filter_by)
-        return await cls.__select(query).mappings().all()
+        result = await cls._select(query)
+        return result.mappings().all()
 
     @classmethod
     async def insert(cls, **data):
         query = insert(cls.model).values(**data).returning(cls.model)
-        return await cls.__update_base(query).scalar_one()
+        result = await cls._update_base(query)
+        return result.scalar_one()
     
     @classmethod
     async def update(cls, model_id: int, **data):
         query = update(cls.model).where(cls.uid == model_id).values(**data).returning(cls.model)
-        return await cls.__update_base(query).scalar_one()
+        result = await cls._update_base(query)
+        return result.scalar_one()
 
     @classmethod
     async def delete(cls, model_id: int) -> bool:
         query = delete(cls.model).where(cls.uid == model_id)
-        return bool(await cls.__update_base(query).rowcount)
+        result = await cls._update_base(query)
+        return bool(result.rowcount)

@@ -10,11 +10,12 @@ router = APIRouter(
 
 @router.get('/get')
 async def get_users() -> list[SUser]:
-    return await UsersDAO.find_all()
+    users = await UsersDAO.find_all()
+    return users
 
 @router.post('/new')
 async def reg_user(user: SUserBase) -> SUser:
-    new_user = await UsersDAO.add(user)
+    new_user = await UsersDAO.registate(user)
     return new_user
 
 @router.put('/update/{user_id}')
@@ -24,4 +25,5 @@ async def update_user(user: SUserBase, user_id: int) -> SUser:
 
 @router.delete('/delete/{user_id}')
 async def delete_user(user_id: int) -> bool:
-    return await UsersDAO.delete(user_id)
+    is_deleted = await UsersDAO.delete(user_id)
+    return is_deleted

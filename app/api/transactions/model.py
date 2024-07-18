@@ -1,7 +1,6 @@
 from app.database import Base
 from sqlalchemy import UUID, Column, Integer, ForeignKey
 
-
 class Transactions(Base):
     __tablename__ = 'transactions'
 

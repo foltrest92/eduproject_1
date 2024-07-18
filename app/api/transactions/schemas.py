@@ -9,4 +9,3 @@ class STransactionBase(BaseModel):
 
 class STransaction(STransactionBase):
     signature: str
-

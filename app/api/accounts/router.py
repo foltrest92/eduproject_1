@@ -2,7 +2,6 @@ from fastapi import APIRouter
 
 from app.api.accounts.dao import AccountsDAO
 
-
 router = APIRouter(
     prefix='/accounts',
     tags=['Accounts']

@@ -3,7 +3,6 @@ from fastapi import APIRouter
 from app.api.users.dao import UsersDAO
 from app.api.users.schemas import SUser, SUserBase
 
-
 router = APIRouter(
     prefix='/users',
     tags=['Users']
@@ -26,5 +25,3 @@ async def update_user(user: SUserBase, user_id: int) -> SUser:
 @router.delete('/delete/{user_id}')
 async def delete_user(user_id: int) -> bool:
     return await UsersDAO.delete(user_id)
-
-

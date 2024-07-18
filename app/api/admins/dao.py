@@ -1,8 +1,8 @@
-from app.api.admins.models import Admins
-from app.api.admins.schemas import SAdmin, SAdminBase
 from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
 
+from app.api.admins.models import Admins
+from app.api.admins.schemas import SAdmin, SAdminBase
 
 class AdminsDAO(BaseDAO):
     model = Admins

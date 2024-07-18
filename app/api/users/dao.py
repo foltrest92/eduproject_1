@@ -1,8 +1,8 @@
-from app.api.users.models import Users
-from app.api.users.schemas import SUser, SUserBase
 from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
 
+from app.api.users.models import Users
+from app.api.users.schemas import SUser, SUserBase
 
 class UsersDAO(BaseDAO):
     model = Users

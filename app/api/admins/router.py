@@ -3,8 +3,6 @@ from fastapi import APIRouter
 from app.api.admins.dao import AdminsDAO
 from app.api.admins.schemas import SAdmin, SAdminBase
 
-
-
 router = APIRouter(
     prefix='/admins',
     tags=['Admins']
@@ -27,5 +25,3 @@ async def update_admin(admin: SAdminBase, admin_id: int) -> SAdmin:
 @router.delete('/delete/{admin_id}')
 async def delete_admin(admin_id: int) -> bool:
     return await AdminsDAO.delete(admin_id)
-
-

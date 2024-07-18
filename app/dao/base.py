@@ -1,8 +1,9 @@
 from uuid import UUID
+
 from sqlalchemy import UpdateBase, delete, insert, select, update
+
 from app.database import async_session_maker
 from app.exceptions import NoFoundException
-
 
 class BaseDAO:
     model = None

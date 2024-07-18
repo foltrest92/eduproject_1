@@ -1,5 +1,5 @@
-import uuid
 from app.database import Base
+
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -12,4 +12,3 @@ class Users(Base):
 
     accounts = relationship("Accounts")
     transactions = relationship('Transactions')
-    

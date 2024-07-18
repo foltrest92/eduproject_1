@@ -1,7 +1,7 @@
-from app.api.accounts.models import Accounts
-from app.api.accounts.schemas import SAccount
 from app.dao.base import BaseDAO
 
+from app.api.accounts.models import Accounts
+from app.api.accounts.schemas import SAccount
 
 class AccountsDAO(BaseDAO):
     model = Accounts

@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class SAccountBase(BaseModel):
     user_id: int
 

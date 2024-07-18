@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
 from app.api.admins.dao import AdminsDAO
-from app.api.admins.schemas import SAdmin, SAdminBase
+from app.api.admins.schemas import SAdmin, SNewAdmin, SUpdateAdmin
+
 
 router = APIRouter(
     prefix='/admins',
@@ -14,12 +15,12 @@ async def get_admins() -> list[SAdmin]:
     return admins
 
 @router.post('/new')
-async def reg_admin(admin: SAdminBase) -> SAdmin:
+async def reg_admin(admin: SNewAdmin) -> SAdmin:
     new_admin = await AdminsDAO.registate(admin)
     return new_admin
 
 @router.put('/update/{admin_id}')
-async def update_admin(admin: SAdminBase, admin_id: int) -> SAdmin:
+async def update_admin(admin: SUpdateAdmin, admin_id: int) -> SAdmin:
     updated_admin = await AdminsDAO.update(admin_id, admin)
     return updated_admin
 

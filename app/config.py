@@ -2,6 +2,14 @@ from typing import Literal
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
+
+    def __init__(self) -> None:
+        super().__init__(self)
+        with open(self.JWT_PRIVATE_KEY_PATH) as f:
+            self.JWT_PRIVATE_KEY = f.read()
+        with open(self.JWT_PUBLIC_KEY_PATH) as f:
+            self.JWT_PUBLIC_KEY = f.read()
+
     MODE: Literal['DEV', 'TEST', 'PROD']
 
     # Для PROD
@@ -30,13 +38,18 @@ class Settings(BaseSettings):
     JWT_PRIVATE_KEY_PATH: str
     JWT_PUBLIC_KEY_PATH: str
 
-    LONG_TOKEN_AGE_DAYS: int
+    REFRESH_TOKEN_AGE: int
+    ACCESS_TOKEN_AGE: int
 
     PASSWORD_SALT: str
 
     PAYMENTS_SECRET_KEY: str
 
+    JWT_PRIVATE_KEY: str | None = None
+    JWT_PUBLIC_KEY: str | None = None
+
     class Config:
         env_file = '.env'
+    
 
 settings = Settings()

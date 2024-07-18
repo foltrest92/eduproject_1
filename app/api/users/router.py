@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.users.dao import UsersDAO
-from app.api.users.schemas import SUser, SUserBase
+from app.api.users.schemas import SNewUser, SUpdateUser, SUser
 
 router = APIRouter(
     prefix='/users',
@@ -14,12 +14,12 @@ async def get_users() -> list[SUser]:
     return users
 
 @router.post('/new')
-async def reg_user(user: SUserBase) -> SUser:
+async def reg_user(user: SNewUser) -> SUser:
     new_user = await UsersDAO.registate(user)
     return new_user
 
 @router.put('/update/{user_id}')
-async def update_user(user: SUserBase, user_id: int) -> SUser:
+async def update_user(user: SUpdateUser, user_id: int) -> SUser:
     updated_user = await UsersDAO.update(user_id, user)
     return updated_user
 

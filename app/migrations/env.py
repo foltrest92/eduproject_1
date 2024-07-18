@@ -15,6 +15,7 @@ from app.api.users.models import Users
 from app.api.admins.models import Admins
 from app.api.accounts.models import Accounts
 from app.api.transactions.model import Transactions
+from app.api.auth.model import JWTTokens, JWTAdminTokens
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

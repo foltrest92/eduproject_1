@@ -49,7 +49,6 @@ class TransactionsDAO(BaseDAO):
         unhashed = f'{transaction.account_id}{transaction.amount}{transaction.transaction_id}{transaction.user_id}'
         unhashed += settings.PAYMENTS_SECRET_KEY
         hash = hashlib.sha256(unhashed.encode()).hexdigest()
-        print(hash)
         return transaction.signature == hash
 
     @classmethod

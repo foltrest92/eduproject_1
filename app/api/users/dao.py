@@ -10,14 +10,14 @@ class UsersDAO(BaseDAO):
 
     @classmethod
     async def find_all(cls) -> list[SUser]:
-        return await super().find_all()
+        return await super().select()
 
     @classmethod
-    async def add(cls, user_base: SUserBase) -> SUser:
+    async def registate(cls, user_base: SUserBase) -> SUser:
         if await cls.find_one_or_none(email=user_base.email):
             raise UserIsAlreadyExist
         else:
-            user = await super().add(**user_base.model_dump())
+            user = await super().insert(**user_base.model_dump())
             return user
     
     @classmethod

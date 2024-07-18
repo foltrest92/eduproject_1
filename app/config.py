@@ -34,6 +34,8 @@ class Settings(BaseSettings):
 
     PASSWORD_SALT: str
 
+    PAYMENTS_SECRET_KEY: str
+
     class Config:
         env_file = '.env'
 

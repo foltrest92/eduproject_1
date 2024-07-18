@@ -5,6 +5,8 @@ from app.exceptions import CustomHTTPException
 
 from app.api.users.router import router as users_router
 from app.api.admins.router import router as admins_router
+from app.api.accounts.router import router as account_router
+from app.api.transactions.router import router as transactions_router
 
 app = FastAPI()
 
@@ -18,3 +20,5 @@ async def exception(request: Request, exc: CustomHTTPException):
 
 app.include_router(users_router)
 app.include_router(admins_router)
+app.include_router(account_router)
+app.include_router(transactions_router)

@@ -21,6 +21,10 @@ class UserIsAlreadyExist(CustomHTTPException):
     status_code=status.HTTP_409_CONFLICT
     detail='User is already exist'
 
+class TransactionIsAlreadyCommitedException(CustomHTTPException):
+    status_code=status.HTTP_409_CONFLICT
+    detail='Transaction is already commited'
+
 class InvalidPasswordOrLoginException(CustomHTTPException):
     status_code: int = status.HTTP_401_UNAUTHORIZED
     detail: str = "Invalid login or password"
@@ -40,3 +44,7 @@ class NoFoundException(CustomHTTPException):
 class UnknownException(CustomHTTPException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
     detail = "WTF"
+
+class InvalidSignatureException(CustomHTTPException):
+    status_code = status.HTTP_409_CONFLICT
+    detail = "Invalid signature"

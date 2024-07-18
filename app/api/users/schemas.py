@@ -8,7 +8,6 @@ class SNewUser(SUserBase):
     password: str
 
 class SUpdateUser(BaseModel):
-    user_id: int | None = None
     email: str | None = None
     full_name: str | None = None
     password: str | None = None

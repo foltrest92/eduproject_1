@@ -1,5 +1,7 @@
+from sqlalchemy import delete
 from app.api.admins.models import Admins
 from app.api.admins.schemas import SAdmin, SNewAdmin, SUpdateAdmin
+from app.api.auth.model import JWTAdminTokens
 from app.api.auth.utils import get_hashed_password
 from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
@@ -41,6 +43,20 @@ class AdminsDAO(BaseDAO):
     @classmethod
     async def delete(cls, admin_id: int) -> bool:
         if await super().delete(admin_id):
+            return True
+        else:
+            raise NoFoundException
+    
+    @classmethod
+    async def delete(cls, admin_id: int) -> bool:
+        delete_tokens_query = delete(JWTAdminTokens).where(JWTAdminTokens.admin_id == admin_id)
+        delete_admin_query = delete(Admins).where(Admins.admin_id == admin_id)
+        queries = [
+            delete_tokens_query,
+            delete_admin_query
+            ]
+        result = await cls._update_base(queries)
+        if result[-1] == True:
             return True
         else:
             raise NoFoundException

@@ -22,7 +22,7 @@ class TransactionsDAO(BaseDAO):
             raise InvalidSignatureException
         if await cls.select_one_or_none(transaction_id=transaction_new.transaction_id):
             raise TransactionIsAlreadyCommitedException
-        account = await AccountsDAO.select(
+        account = await AccountsDAO.select_one_or_none(
                 user_id=transaction_new.user_id,
                 account_id=transaction_new.account_id)
         if not account:
@@ -39,7 +39,7 @@ class TransactionsDAO(BaseDAO):
         d_balance = update(Accounts).where(and_(
                 Accounts.user_id == transaction_new.user_id,
                 Accounts.account_id == transaction_new.account_id
-            )).values(balance = account.balance).returning(Accounts)
+            )).values(balance = account.balance + transaction_new.amount).returning(Accounts)
         query = [d_transaction, d_balance]
         result = await cls._update_base(query)
         return bool(result)

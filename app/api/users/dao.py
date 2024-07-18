@@ -1,4 +1,8 @@
+from sqlalchemy import delete
+from app.api.accounts.models import Accounts
+from app.api.auth.model import JWTTokens
 from app.api.auth.utils import get_hashed_password
+from app.api.transactions.model import Transactions
 from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
 
@@ -39,7 +43,16 @@ class UsersDAO(BaseDAO):
     
     @classmethod
     async def delete(cls, user_id: int) -> bool:
-        if await super().delete(user_id):
+        delete_transactions_query = delete(Transactions).where(Transactions.user_id == user_id)
+        delete_account_query = delete(Accounts).where(Accounts.user_id == user_id)
+        delete_tokens_query = delete(JWTTokens).where(JWTTokens.user_id == user_id)
+        delete_user_query = delete(Users).where(Users.user_id == user_id)
+        queries = [delete_transactions_query,
+                    delete_account_query,
+                    delete_tokens_query,
+                    delete_user_query]
+        result = await cls._update_base(queries)
+        if result[-1] == True:
             return True
         else:
             raise NoFoundException

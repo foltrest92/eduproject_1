@@ -16,8 +16,3 @@ class AccountsDAO(BaseDAO):
     async def new(cls, account: SAccount) -> SAccount:
         account = await super().insert(**account.model_dump())
         return account
-    
-    @classmethod
-    async def select(cls, **filter_by) -> SAccount:
-        result = await super().select_one_or_none(**filter_by)
-        return result

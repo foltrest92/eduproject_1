@@ -21,7 +21,7 @@ class BaseDAO:
     @classmethod
     async def _update_base(cls, query: list[UpdateBase] | UpdateBase):
         async with async_session_maker() as session:
-            if isinstance(query, list):
+            if type(query) is list:
                 result = [await session.execute(q) for q in query]
             else:
                 result = await session.execute(query)
@@ -30,8 +30,10 @@ class BaseDAO:
 
     @classmethod
     async def find_by_id(cls, model_id: int | UUID):
+        filter = {cls.uid.name:model_id}
         query = select(cls.model.__table__.columns).filter_by(**filter)
-        mapped = await cls._select(query).mappings().one_or_none()
+        result = await cls._select(query)
+        mapped = result.mappings().one_or_none()
         if mapped:
             return mapped
         raise NoFoundException()

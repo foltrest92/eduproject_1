@@ -3,7 +3,6 @@ import hashlib
 import jwt
 from app.config import settings
 
-
 def get_hashed_password(password: str) -> str:
     return hashlib.sha256(f'{password}{settings.PASSWORD_SALT}'.encode()).hexdigest()
 

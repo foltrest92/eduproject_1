@@ -6,15 +6,9 @@ class CustomHTTPException(Exception):
     def __init__(self) -> None:
         super().__init__(NoFoundException.status_code, NoFoundException.detail)
 
-
 class TokenIsInvalidException(CustomHTTPException):
     status_code=status.HTTP_401_UNAUTHORIZED
     detail="Invalid access_token"
-
-
-class TokenIsExpiredException(CustomHTTPException):
-    status_code=status.HTTP_401_UNAUTHORIZED
-    detail="Access_token is expired"
 
 class UserIsAlreadyExist(CustomHTTPException):
     status_code=status.HTTP_409_CONFLICT
@@ -39,10 +33,6 @@ class NoPermissionException(CustomHTTPException):
 class NoFoundException(CustomHTTPException):
     status_code = status.HTTP_404_NOT_FOUND
     detail="No found"
-
-class UnknownException(CustomHTTPException):
-    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-    detail = "WTF"
 
 class InvalidSignatureException(CustomHTTPException):
     status_code = status.HTTP_409_CONFLICT

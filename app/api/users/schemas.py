@@ -12,7 +12,6 @@ class SUpdateUser(BaseModel):
     full_name: str | None = None
     password: str | None = None
 
-
 class SUser(SUserBase):
     user_id: int
 

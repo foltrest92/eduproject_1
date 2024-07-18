@@ -1,9 +1,6 @@
-from uuid import UUID
-
 from sqlalchemy import UpdateBase, delete, insert, select, update
 
 from app.database import async_session_maker
-from app.exceptions import NoFoundException
 
 class BaseDAO:
     model = None
@@ -27,16 +24,6 @@ class BaseDAO:
                 result = await session.execute(query)
             await session.commit()
             return result
-
-    @classmethod
-    async def find_by_id(cls, model_id: int | UUID):
-        filter = {cls.uid.name:model_id}
-        query = select(cls.model.__table__.columns).filter_by(**filter)
-        result = await cls._select(query)
-        mapped = result.mappings().one_or_none()
-        if mapped:
-            return mapped
-        raise NoFoundException()
 
     @classmethod
     async def select_one_or_none(cls, **filter_by):

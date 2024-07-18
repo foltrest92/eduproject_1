@@ -4,7 +4,6 @@ from app.api.admins.dao import AdminsDAO
 from app.api.admins.schemas import SAdmin, SNewAdmin, SUpdateAdmin
 from app.api.auth.permission import is_admin_permission
 
-
 router = APIRouter(
     prefix='/admins',
     tags=['Admins']

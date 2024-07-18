@@ -18,26 +18,32 @@ class AuthDAO(BaseDAO):
 
     @classmethod
     async def auth(cls, email_password, is_admin = False) -> TokensPair:
+
         if is_admin:
             user = await cls.get_admin_by_email(email_password.email)
         else:
             user = await cls.get_user_by_email(email_password.email)
+        
         if not user or not cls.check_password(user, email_password.password):
             raise InvalidPasswordOrLoginException
+
         refresh_token = await cls.get_refresh_token(user, is_admin=is_admin)
         access_token = await cls.get_access_token(refresh_token)
+
         return TokensPair(refresh_token=refresh_token, access_token=access_token)
 
     @classmethod
     def check_password(cls, user: SUserWithPassword, password: str) -> bool:
+
         hash = get_hashed_password(password)
         from_db = user.hashed_password
+
         return hash == from_db
 
     @classmethod
     async def get_refresh_token(cls, user: SUserWithPassword | SAdminWithPassword, is_admin = False):
-        
         jti = uuid.uuid4()
+
         if is_admin:
             sub = user.admin_id
             role = 'admin'
@@ -46,7 +52,9 @@ class AuthDAO(BaseDAO):
             sub = user.user_id
             role = 'user'
             refresh_token = await AuthDAO.reg_refresh_token(RefreshToken(jti=jti, user_id=sub))
+        
         exp = datetime.now(tz=timezone.utc) + timedelta(seconds=settings.REFRESH_TOKEN_AGE)
+
         token_str = jwt_encode({
             'type': 'refresh',
             'sub': sub,
@@ -54,12 +62,14 @@ class AuthDAO(BaseDAO):
             'exp': exp,
             'jti': str(refresh_token.jti)
             })
+        
         return token_str
 
     @classmethod
     async def get_access_token(cls, refresh_token: str):
         payload = await cls.check_refresh_token(refresh_token)
         exp = datetime.now(tz=timezone.utc) + timedelta(seconds=settings.REFRESH_TOKEN_AGE)
+
         return jwt_encode({
             'type': 'access',
             'sub': payload['sub'],
@@ -70,8 +80,10 @@ class AuthDAO(BaseDAO):
     @classmethod
     async def check_refresh_token(cls, refresh_token: str) -> dict:
         payload = jwt_decode(refresh_token)
+
         if payload['type'] != 'refresh':
             raise TokenIsInvalidException
+        
         if payload['role'] == 'admin':
              if not await cls.select_one_or_none(jti=uuid.UUID(payload['jti']), is_admin=True):
                 raise TokenIsInvalidException

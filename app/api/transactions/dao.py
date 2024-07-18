@@ -46,7 +46,8 @@ class TransactionsDAO(BaseDAO):
     
     @classmethod
     def __check_signature(cls, transaction: STransaction) -> bool:
-        unhashed = f'{transaction.account_id}{transaction.amount}{transaction.transaction_id}{transaction.user_id}'
+        unhashed = (f'{transaction.account_id}{transaction.amount}' +
+        f'{transaction.transaction_id}{transaction.user_id}')
         unhashed += settings.PAYMENTS_SECRET_KEY
         hash = hashlib.sha256(unhashed.encode()).hexdigest()
         return transaction.signature == hash

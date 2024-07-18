@@ -6,8 +6,6 @@ from app.api.auth.utils import get_hashed_password
 from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
 
-
-
 class AdminsDAO(BaseDAO):
     model = Admins
     uid = Admins.admin_id

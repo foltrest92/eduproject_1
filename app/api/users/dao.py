@@ -1,4 +1,4 @@
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 from app.api.accounts.models import Accounts
 from app.api.auth.model import JWTTokens
 from app.api.auth.utils import get_hashed_password
@@ -7,7 +7,7 @@ from app.dao.base import BaseDAO
 from app.exceptions import NoFoundException, UserIsAlreadyExist
 
 from app.api.users.models import Users
-from app.api.users.schemas import SNewUser, SUpdateUser, SUser, SUserBase
+from app.api.users.schemas import SNewUser, SUpdateUser, SUser
 
 class UsersDAO(BaseDAO):
     model = Users
@@ -30,7 +30,16 @@ class UsersDAO(BaseDAO):
                 'hashed_password': hashed_password
             })
             return user
-    
+        
+    @classmethod
+    async def find_by_id(cls, user_id):
+        query = select(Users.__table__.columns).filter_by(user_id=user_id)
+        result = await cls._select(query)
+        mapped = result.mappings().one_or_none()
+        if mapped:
+            return mapped
+        raise NoFoundException()
+
     @classmethod
     async def update(cls, user_id: int, user_update: SUpdateUser) -> SUser:
         update_data = user_update.model_dump()

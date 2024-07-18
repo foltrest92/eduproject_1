@@ -9,7 +9,11 @@ from app.api.accounts.router import router as account_router
 from app.api.transactions.router import router as transactions_router
 from app.api.auth.router import router as auth_router
 
-app = FastAPI()
+app = FastAPI(
+    title='Exercise',
+    description='Проект для обучения',
+    version='0.5'
+)
 
 @app.exception_handler(CustomHTTPException)
 async def exception(request: Request, exc: CustomHTTPException):
@@ -17,7 +21,6 @@ async def exception(request: Request, exc: CustomHTTPException):
         status_code=exc.status_code,
         content={'message': exc.detail}
     )
-
 
 app.include_router(users_router)
 app.include_router(admins_router)

@@ -1,7 +1,6 @@
 from sqlalchemy import UUID, Column, Integer, ForeignKey, Boolean
 from app.database import Base
 
-
 class JWTTokens(Base):
     __tablename__ = 'jwttoken'
 

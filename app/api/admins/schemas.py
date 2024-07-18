@@ -1,4 +1,3 @@
-from uuid import UUID
 from pydantic import BaseModel
 
 
@@ -7,4 +6,4 @@ class SAdminBase(BaseModel):
     full_name: str
 
 class SAdmin(SAdminBase):
-    admin_id: UUID
+    admin_id: int

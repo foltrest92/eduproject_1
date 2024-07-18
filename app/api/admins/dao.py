@@ -1,4 +1,3 @@
-from uuid import UUID
 from app.api.admins.models import Admins
 from app.api.admins.schemas import SAdmin, SAdminBase
 from app.dao.base import BaseDAO
@@ -22,12 +21,12 @@ class AdminsDAO(BaseDAO):
             return admin
     
     @classmethod
-    async def update(cls, admin_id: UUID, admin_base: SAdminBase) -> SAdmin:
+    async def update(cls, admin_id: int, admin_base: SAdminBase) -> SAdmin:
         updated_admin = await super().update(admin_id, **admin_base.model_dump())
         return updated_admin
     
     @classmethod
-    async def delete(cls, admin_id: UUID) -> bool:
+    async def delete(cls, admin_id: int) -> bool:
         if await super().delete(admin_id):
             return True
         else:

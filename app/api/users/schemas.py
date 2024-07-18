@@ -1,4 +1,3 @@
-from uuid import UUID
 from pydantic import BaseModel
 
 
@@ -7,4 +6,4 @@ class SUserBase(BaseModel):
     full_name: str
 
 class SUser(SUserBase):
-    user_id: UUID
+    user_id: int

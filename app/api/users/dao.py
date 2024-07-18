@@ -1,4 +1,3 @@
-from uuid import UUID
 from app.api.users.models import Users
 from app.api.users.schemas import SUser, SUserBase
 from app.dao.base import BaseDAO
@@ -22,12 +21,12 @@ class UsersDAO(BaseDAO):
             return user
     
     @classmethod
-    async def update(cls, user_id: UUID, user_base: SUserBase) -> SUser:
+    async def update(cls, user_id: int, user_base: SUserBase) -> SUser:
         updated_user = await super().update(user_id, **user_base.model_dump())
         return updated_user
     
     @classmethod
-    async def delete(cls, user_id: UUID) -> bool:
+    async def delete(cls, user_id: int) -> bool:
         if await super().delete(user_id):
             return True
         else:
